@@ -28,8 +28,8 @@ export default function NavBar(NavbarProps: Props) {
     <nav
       className={`  ${
         isOpen
-          ? " flex flex-col justify-between py-4 px-8 items-center gap-8  h-screen "
-          : " flex justify-between py-4 px-8 items-center gap-8"
+          ? " flex flex-col justify-between py-4 px-8 items-center gap-8  h-screen bg-gray-800"
+          : " flex justify-between py-4 px-8 items-center gap-8 bg-gray-800"
       }`}
     >
       {NavbarProps.logo ? (
@@ -44,7 +44,7 @@ export default function NavBar(NavbarProps: Props) {
         </>
       ) : (
         <>
-          <p>Adicione um imagem para o logo</p>
+          <p>Adicione uma imagem para o logo</p>
         </>
       )}
 
