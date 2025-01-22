@@ -123,12 +123,13 @@ export default function Home() {
 
           <div>
             {fields.map((field, index) => (
-              <div
+              <details
                 key={index}
                 className="flex flex-col gap-0 odd:bg-gray-700 odd:text-white even:bg-gray-300 even:text-black "
               >
-                <h2 className="w-full pl-1 p-0.5">{field.name}</h2>
-              </div>
+                <summary className="p-1">{field.name}</summary>
+                {field.description}
+              </details>
             ))}
           </div>
         </div>
