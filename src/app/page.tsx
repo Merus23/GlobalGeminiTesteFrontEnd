@@ -1,4 +1,5 @@
 "use client";
+import axios from "axios";
 import React, { useState } from "react";
 
 interface IField {
@@ -20,8 +21,25 @@ export default function Home() {
     }
   };
 
-  function handleProcessFile(e: React.FormEvent<HTMLFormElement>) {
+  async function handleProcessFile(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+
+    const formData = new FormData();
+    formData.append("file", selectedFile as Blob);
+    formData.append("fields", JSON.stringify(fields));
+    //Mocado por agora
+    formData.append("type", "Contrato");
+
+    try {
+      const response = await axios.post("", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      console.log("Response:", response.data);
+    } catch (error) {
+      console.error("Error:", error);
+    }
 
     console.log("Fetching file");
   }
@@ -103,14 +121,16 @@ export default function Home() {
             Adicionar campo
           </button>
 
-          {fields.map((field, index) => (
-            <div
-              key={index}
-              className="flex flex-col gap-0 odd:bg-gray-700 odd:text-white even:bg-gray-300 even:text-black "
-            >
-              <h2 className="w-full pl-1 p-0.5">{field.name}</h2>
-            </div>
-          ))}
+          <div>
+            {fields.map((field, index) => (
+              <div
+                key={index}
+                className="flex flex-col gap-0 odd:bg-gray-700 odd:text-white even:bg-gray-300 even:text-black "
+              >
+                <h2 className="w-full pl-1 p-0.5">{field.name}</h2>
+              </div>
+            ))}
+          </div>
         </div>
 
         <button className="bg-gray-700 text-white w-72 p-2 rounded-lg mx-auto">
