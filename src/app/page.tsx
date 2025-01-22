@@ -128,7 +128,9 @@ export default function Home() {
                 className="flex flex-col gap-0 odd:bg-gray-700 odd:text-white even:bg-gray-300 even:text-black "
               >
                 <summary className="p-1">{field.name}</summary>
-                {field.description}
+                <p className="max-w-80 text-wrap text-center">
+                  {field.description}
+                </p>
               </details>
             ))}
           </div>
