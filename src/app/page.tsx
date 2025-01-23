@@ -7,6 +7,10 @@ interface IField {
   description: string;
 }
 
+interface IResponse extends IField {
+  response: string;
+}
+
 export default function Home() {
   const [fields, setFields] = useState<IField[]>([]);
   const [field, setField] = useState<IField>({
@@ -14,6 +18,7 @@ export default function Home() {
     description: "",
   });
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [responses, setResponses] = useState<IResponse[]>([]);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
@@ -37,6 +42,10 @@ export default function Home() {
         },
       });
       console.log("Response:", response.data);
+
+      if (response) {
+        setResponses(response.data);
+      }
     } catch (error) {
       console.error("Error:", error);
     }
@@ -140,7 +149,24 @@ export default function Home() {
           Buscar no contrato
         </button>
       </form>
-      <div className="bg-white flex-1 w-full"></div>
+      <div className=" flex-1 w-full">
+        <h1 className="text-2xl pt-4 pb-4">Resultados</h1>
+
+        {responses.map((response, index) => {
+          return (
+            <>
+              <details
+                key={index}
+                className="flex flex-col gap-0 odd:bg-gray-700 odd:text-white even:bg-gray-300 even:text-black "
+              >
+                <summary className="text-lg">{response.name}</summary>
+                <p>{response.description}</p>
+              </details>
+              <p>{response.response}</p>
+            </>
+          );
+        })}
+      </div>
     </div>
   );
 }
