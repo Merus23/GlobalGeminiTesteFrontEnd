@@ -57,7 +57,7 @@ export default function Home() {
     formData.append("type", selectedDocumentType);
 
     try {
-      const response = await axios.post("", formData, {
+      const response = await axios.post("http://127.0.0.1:8080/processo_dinamico", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -65,7 +65,7 @@ export default function Home() {
       console.log("Response:", response.data);
 
       if (response) {
-        setResponses(response.data);
+        setResponses(response.data.fields);
       }
     } catch (error) {
       console.error("Error:", error);
@@ -203,19 +203,19 @@ export default function Home() {
         <h1 className="text-2xl pt-4 pb-4">Resultados</h1>
 
         {responses.map((response, index) => {
-          return (
-            <>
-              <details
-                key={index}
-                className="flex flex-col gap-0 odd:bg-gray-700 odd:text-white even:bg-gray-300 even:text-black "
-              >
-                <summary className="text-lg">{response.name}</summary>
-                <p>{response.description}</p>
-              </details>
-              <p>{response.response}</p>
-            </>
-          );
-        })}
+  return (
+    <div
+      key={index}
+      className="flex flex-col gap-0 odd:bg-gray-700 odd:text-white even:bg-gray-300 even:text-black"
+    >
+      <details>
+        <summary className="text-lg">{response.name}</summary>
+        <p>{response.description}</p>
+      </details>
+      <p>{response.response}</p>
+    </div>
+  );
+})}
       </div>
     </div>
   );
