@@ -17,6 +17,24 @@ export default function Home() {
     name: "",
     description: "",
   });
+
+  const [selectedDocumentType, setSelectedDocumentType] = useState<string>("");
+
+  const ContratoSES: IField[] = [
+    {
+      name: "CNPJ Contratante",
+      description:
+        "CNPJ do contratante do serviço. CNPJ é do formato xx.xxx.xxx/xxxx-xx.",
+    },
+    {
+      name: "CNPJ Contratado",
+      description:
+        "CNPJ do contratado do serviço. CNPJ é do formato xx.xxx.xxx/xxxx-xx.",
+    },
+    { name: "Nome Contratante", description: "Nome do contratante do serviço" },
+    { name: "Nome Contratado", description: "Nome do contratado do serviço" },
+  ];
+
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [responses, setResponses] = useState<IResponse[]>([]);
 
@@ -25,6 +43,10 @@ export default function Home() {
       setSelectedFile(event.target.files[0]);
     }
   };
+
+  function addFields(fields: IField[]) {
+    setFields(fields);
+  }
 
   async function handleProcessFile(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -56,7 +78,7 @@ export default function Home() {
   return (
     <div className=" flex flex-col md:flex-row h-full">
       <form
-        className="flex-1 w-full h-full flex flex-col gap-6 items-center"
+        className="flex-1 w-full h-full flex flex-col gap-6 items-center p-2 md:p-0"
         onSubmit={handleProcessFile}
       >
         <div className="h-32 w-full flex flex-col gap-2 items-center pb-4">
@@ -88,7 +110,7 @@ export default function Home() {
                 d="M12 16.5V9.75m0 0 3 3m-3-3-3 3M6.75 19.5a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z"
               />
             </svg>
-            Faça o upload do seu contrato aqui
+            Faça o upload do seu arquivo aqui
           </label>
 
           {selectedFile ? (
@@ -96,7 +118,7 @@ export default function Home() {
               {selectedFile.name.substring(0, 40)}...
             </p>
           ) : (
-            <p className="text-base w-fit">Nenhum contrato selecionado ainda</p>
+            <p className="text-base w-fit">Nenhum arquivo selecionado ainda</p>
           )}
         </div>
 
@@ -105,30 +127,59 @@ export default function Home() {
             Informe os campos que deseja buscar
           </h1>
 
-          <input
-            type="text"
-            placeholder="Nome do campo"
-            className="border-2 border-gray-300 rounded-lg p-1"
-            value={field.name}
-            onChange={(e) => setField({ ...field, name: e.target.value })}
-          />
-          <textarea
-            name="description"
-            id=""
-            placeholder="Descrição do campo"
-            className="resize-none border-2 p-1 border-gray-300 rounded-lg"
-            value={field.description}
-            onChange={(e) =>
-              setField({ ...field, description: e.target.value })
-            }
-          ></textarea>
+          <div className="w-full border-4 p-2 rounded-lg">
+            <h1 className="text-lg">Campos pré-definidos.</h1>
+            <h3 className="text-sm">
+              Caso queira um campos pré-definido, basta selecionar um item.
+            </h3>
+            <select
+              name="SelectDocumentType"
+              id="Select-document-type"
+              className="border-2 border-gray-300 rounded-lg p-1 w-full"
+              onChange={(e) => {
+                setSelectedDocumentType(e.target.value);
+                if (e.target.value === "Contrato") {
+                  addFields(ContratoSES);
+                }
+              }}
+            >
+              <option value="">Selecione um documento</option>
+              <option value="Contrato">Contrato SES</option>
+            </select>
+          </div>
 
-          <button
-            className="bg-gray-700 text-white w-fit p-2 rounded-lg mx-auto"
-            onClick={() => setFields(fields.concat(field))}
-          >
-            Adicionar campo
-          </button>
+          <div className="w-full border-4 p-2 rounded-lg space-y-2">
+            <h1 className="text-lg">Campos personalizados</h1>
+            <input
+              type="text"
+              placeholder="Nome do campo"
+              className="border-2 border-gray-300 rounded-lg p-1 w-full"
+              value={field.name}
+              onChange={(e) => setField({ ...field, name: e.target.value })}
+            />
+            <textarea
+              name="description"
+              id=""
+              placeholder="Descrição do campo"
+              className="resize-none border-2 p-1 border-gray-300 rounded-lg w-full"
+              value={field.description}
+              onChange={(e) => {
+                setField({ ...field, description: e.target.value });
+              }}
+            ></textarea>
+            <button
+              className="bg-gray-700 text-white w-fit p-2 rounded-lg mx-auto"
+              onClick={() => {
+                if (field.name && field.description) {
+                  setFields(fields.concat(field));
+                } else {
+                  alert("Preencha todos os campos nome e descrição");
+                }
+              }}
+            >
+              Adicionar campo personalizado
+            </button>
+          </div>
 
           <div>
             {fields.map((field, index) => (
@@ -137,7 +188,7 @@ export default function Home() {
                 className="flex flex-col gap-0 odd:bg-gray-700 odd:text-white even:bg-gray-300 even:text-black "
               >
                 <summary className="p-1">{field.name}</summary>
-                <p className="max-w-80 text-wrap text-center">
+                <p className="max-w-80 md:max-w-full text-wrap text-center md:text-left md:pl-4">
                   {field.description}
                 </p>
               </details>
@@ -146,7 +197,7 @@ export default function Home() {
         </div>
 
         <button className="bg-gray-700 text-white w-72 p-2 rounded-lg mx-auto">
-          Buscar no contrato
+          Buscar no arquivo
         </button>
       </form>
       <div className=" flex-1 w-full">
