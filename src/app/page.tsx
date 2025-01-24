@@ -1,6 +1,7 @@
 "use client";
 import axios from "axios";
 import React, { useState } from "react";
+import Spinner from "./components/Spinner/Spinner";
 
 interface IField {
   name: string;
@@ -12,6 +13,7 @@ interface IResponse extends IField {
 }
 
 export default function Home() {
+  const [loading, setLoading] = useState<boolean>(false);
   const [fields, setFields] = useState<IField[]>([]);
   const [field, setField] = useState<IField>({
     name: "",
@@ -57,6 +59,7 @@ export default function Home() {
     formData.append("type", selectedDocumentType);
 
     try {
+      setLoading(true);
       const response = await axios.post(
         "http://127.0.0.1:8080/processo_dinamico",
         formData,
@@ -71,11 +74,15 @@ export default function Home() {
       if (response) {
         setResponses(response.data.fields);
       }
+    
     } catch (error) {
       console.error("Error:", error);
+    } finally {
+      setLoading(false);
     }
 
     console.log("Fetching file");
+
   }
 
   return (
@@ -221,6 +228,7 @@ export default function Home() {
           );
         })}
       </div>
+      <Spinner isVisible={loading}/>
     </div>
   );
 }
