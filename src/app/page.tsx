@@ -210,7 +210,7 @@ export default function Home() {
           return (
             <div
               key={index}
-              className="flex flex-col gap-1 odd:bg-gray-700 odd:text-white even:bg-gray-300 even:text-black"
+              className="p-1 flex flex-col gap-1 odd:bg-gray-700 odd:text-white even:bg-gray-300 even:text-black"
             >
               <details>
                 <summary className="text-base">{response.name}</summary>
