@@ -54,8 +54,7 @@ export default function Home() {
     const formData = new FormData();
     formData.append("file", selectedFile as Blob);
     formData.append("fields", JSON.stringify(fields));
-    //Mocado por agora
-    formData.append("type", "Contrato");
+    formData.append("type", selectedDocumentType);
 
     try {
       const response = await axios.post("", formData, {
