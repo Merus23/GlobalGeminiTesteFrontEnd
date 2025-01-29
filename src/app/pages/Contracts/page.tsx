@@ -74,10 +74,10 @@ export default function Documents() {
           },
         }
       );
-      console.log("Response:", response.data);
-
+      console.log("Response:", response.data.resposta);
+      console.log("ID: ", response.data.uid);
       if (response) {
-        setResponses(response.data.fields);
+        setResponses(Object.values(response.data.resposta).flat() as IResponse[]);
       }
     } catch (error) {
       console.error("Error:", error);
