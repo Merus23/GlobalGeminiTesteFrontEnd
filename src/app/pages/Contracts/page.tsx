@@ -37,13 +37,12 @@ export default function Documents() {
     { name: "Nome Contratado", description: "Nome do contratado do serviço" },
   ];
 
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [selectedFiles, setSelectedFiles] = useState<File[] | null>(null);
   const [responses, setResponses] = useState<IResponse[]>([]);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files.length > 0) {
-      setSelectedFile(event.target.files[0]);
-    }
+    const files = event.target.files ? Array.from(event.target.files) : [];
+    setSelectedFiles((prevFiles) => [...(prevFiles || []), ...files]);
   };
 
   function addFields(fields: IField[]) {
@@ -54,7 +53,13 @@ export default function Documents() {
     e.preventDefault();
 
     const formData = new FormData();
-    formData.append("file", selectedFile as Blob);
+    let fileIndex = 0;
+    if (selectedFiles) {
+      for (const file of selectedFiles) {
+        formData.append(`files[${fileIndex}]`, file as Blob);
+        fileIndex++;
+      }
+    }
     formData.append("fields", JSON.stringify(fields));
     formData.append("type", selectedDocumentType);
 
@@ -97,6 +102,7 @@ export default function Documents() {
             id="file-upload"
             required
             disabled={false}
+            multiple={true}
           />
           <label
             htmlFor="file-upload"
@@ -120,11 +126,14 @@ export default function Documents() {
             </svg>
             Faça o upload do seu arquivo aqui
           </label>
-
-          {selectedFile ? (
-            <p className="text-base w-fit">
-              {selectedFile.name.substring(0, 40)}...
-            </p>
+          {selectedFiles && selectedFiles.length > 0 ? (
+            selectedFiles.length === 1 ? (
+              <p className="text-base w-fit">Apenas um arquivo selecionado</p>
+            ) : (
+              <p className="text-base w-fit">
+                {selectedFiles.length} arquivos selecionados
+              </p>
+            )
           ) : (
             <p className="text-base w-fit">Nenhum arquivo selecionado ainda</p>
           )}
