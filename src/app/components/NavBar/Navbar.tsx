@@ -38,6 +38,7 @@ export default function NavBar(NavbarProps: Props) {
             <Image
               src={NavbarProps.logo}
               alt="logo"
+              priority
               className={`${isOpen ? "w-24 hidden" : "w-24 block"}`}
             />
           </Link>
