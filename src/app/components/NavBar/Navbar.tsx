@@ -28,8 +28,8 @@ export default function NavBar(NavbarProps: Props) {
     <nav
       className={`  ${
         isOpen
-          ? " flex flex-col justify-between py-4 px-8 items-center gap-8  h-screen bg-gray-300"
-          : " flex justify-between py-4 px-8 items-center gap-8 bg-gray-300"
+          ? " flex flex-col justify-between py-4 px-8 items-center gap-8  h-screen bg-blue-300"
+          : " flex justify-between py-4 px-8 items-center gap-8 bg-blue-300"
       }`}
     >
       {NavbarProps.logo ? (
@@ -64,7 +64,7 @@ export default function NavBar(NavbarProps: Props) {
           >
             <Link
               href={item.href}
-              className={`inline-block text-gray-700 hover:text-gray-900 transform scale-100 transition-transform duration-700 hover:scale-110 ${
+              className={`text-xl inline-block text-gray-700 hover:text-gray-900 transform transition-transform duration-700 hover:scale-125 ${
                 isOpen ? "" : ""
               }`}
             >
