@@ -16,8 +16,8 @@ export default function RootLayout({
 
   return (
     <html lang="pt-BR">
-      <body>
-        {/*<NavBar navItems={navItems} />*/}
+      <body className="h-dvh">
+        <NavBar navItems={navItems} />
         {children}
       </body>
     </html>
