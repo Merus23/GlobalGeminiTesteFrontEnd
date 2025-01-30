@@ -43,7 +43,9 @@ export default function Documents() {
 
   const [selectedFiles, setSelectedFiles] = useState<File[] | null>(null);
   const [responses, setResponses] = useState<IResponse[]>([]);
-  const [test, setTest] = useState<ServiceContract>();
+  const [ServiceContract, setServiceContract] = useState<ServiceContract>();
+
+  const [documentsId, setDocumentsId] = useState<string | null>(null);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files ? Array.from(event.target.files) : [];
@@ -52,6 +54,37 @@ export default function Documents() {
 
   function addFields(fields: IField[]) {
     setFields(fields);
+  }
+
+  async function handleGenerateXLS(id: string) {
+    try {
+      const response = await axios.get(`/request_excel/${id}`, {
+        headers: {
+          "Content-Type":
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        },
+        responseType: "blob",
+      });
+
+      if (response) {
+        const blob = new Blob([response.data], {
+          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        });
+
+        const url = window.URL.createObjectURL(blob);
+
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `arquivo_${id}.xlsx`;
+        document.body.appendChild(link);
+        link.click();
+
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+      }
+    } catch (err) {
+      console.error("Erro ao gerar o arquivo XLSX", err);
+    }
   }
 
   async function handleProcessFile(e: React.FormEvent<HTMLFormElement>) {
@@ -79,11 +112,12 @@ export default function Documents() {
           },
         }
       );
-      console.log("Response:", response.data.resposta);
-      console.log("ID: ", response.data.uid);
+
       if (response) {
-        setTest(response.data.resposta);
-        console.log(test);
+        setDocumentsId(response.data.uid);
+
+        setServiceContract(response.data.resposta);
+
         setResponses(response.data.resposta);
       }
     } catch (error) {
@@ -96,7 +130,7 @@ export default function Documents() {
   }
 
   return (
-    <div className="flex flex-col md:flex-row h-auto">
+    <div className="flex flex-col md:flex-row h-auto p-10">
       <form
         className="flex-1 w-full h-full flex flex-col gap-6 items-center p-2 md:p-0"
         onSubmit={handleProcessFile}
@@ -224,30 +258,44 @@ export default function Documents() {
           Buscar no arquivo
         </button>
       </form>
-      <div className=" flex-1 w-full">
-        <h1 className="text-2xl pt-4 pb-4">Resultados</h1>
+      <div className="flex-1 w-full flex flex-col">
+        <div className="flex-1">
+          <h1 className="text-2xl py-4">Resultados</h1>
 
-        {Object.keys(responses).map((key, index) => (
-          <details
-            key={index}
-            className="p-1 flex flex-col gap-1 odd:bg-gray-700 odd:text-white even:bg-gray-300 even:text-black w-1/2"
+          {Object.keys(responses).map((key, index) => (
+            <details
+              key={index}
+              className="p-1 flex flex-col gap-1 odd:bg-gray-700 odd:text-white even:bg-gray-300 even:text-black"
+            >
+              <summary className="text-lg font-semibold">
+                Arquivo {index + 1}
+              </summary>
+              {responses[key].map((r: IResponse, index: number) => {
+                return (
+                  <details className="pl-4 flex flex-col gap-1  ">
+                    <summary>Campo {index + 1}</summary>
+                    <div className="pl-4">
+                      <p className="text-base font-semibold">{r.name}</p>
+                      <p className="text-base">{r.response}</p>
+                    </div>
+                  </details>
+                );
+              })}
+            </details>
+          ))}
+        </div>
+        <div>
+          <button
+            className={`bg-gray-700 text-white p-3 rounded-lg`}
+            disabled={documentsId ? false : true}
+            onClick={() => {
+              if (documentsId) handleGenerateXLS(documentsId);
+              setDocumentsId(null);
+            }}
           >
-            <summary className="text-lg font-semibold">
-              Arquivo {index + 1}
-            </summary>
-            {responses[key].map((r, index) => {
-              return (
-                <details className="pl-4 flex flex-col gap-1  ">
-                  <summary>Campo {index + 1}</summary>
-                  <div className="pl-4">
-                    <p className="text-base font-semibold">{r.name}</p>
-                    <p className="text-base">{r.response}</p>
-                  </div>
-                </details>
-              );
-            })}
-          </details>
-        ))}
+            Download em XLSX
+          </button>
+        </div>
       </div>
       <Spinner isVisible={loading} />
     </div>
