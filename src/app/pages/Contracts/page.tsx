@@ -227,22 +227,6 @@ export default function Documents() {
       <div className=" flex-1 w-full">
         <h1 className="text-2xl pt-4 pb-4">Resultados</h1>
 
-        {/*
-            
-             return (
-            <div
-              key={index}
-              className="p-1 flex flex-col gap-1 odd:bg-gray-700 odd:text-white even:bg-gray-300 even:text-black"
-            >
-              <details>
-                <summary className="text-base">{response.name}</summary>
-                <p className="text-sm">{response.description}</p>
-              </details>
-              <p className="text-lg font-semibold">{response.response}</p>
-            </div>
-          );
-            */}
-
         {Object.keys(responses).map((key, index) => (
           <details
             key={index}
