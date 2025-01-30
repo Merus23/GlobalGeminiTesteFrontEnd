@@ -58,7 +58,7 @@ export default function Documents() {
 
   async function handleGenerateXLS(id: string) {
     try {
-      const response = await axios.get(`/request_excel/${id}`, {
+      const response = await axios.get(`http://127.0.0.1:8080/request_excel/${id}`, {
         headers: {
           "Content-Type":
             "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -272,7 +272,7 @@ export default function Documents() {
               </summary>
               {responses[key].map((r: IResponse, index: number) => {
                 return (
-                  <details className="pl-4 flex flex-col gap-1  ">
+                  <details key={index*2} className="pl-4 flex flex-col gap-1  ">
                     <summary>Campo {index + 1}</summary>
                     <div className="pl-4">
                       <p className="text-base font-semibold">{r.name}</p>
