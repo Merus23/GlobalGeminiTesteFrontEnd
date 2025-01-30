@@ -12,6 +12,10 @@ interface IResponse extends IField {
   response: string;
 }
 
+interface ServiceContract {
+  [key: string]: IResponse[];
+}
+
 export default function Documents() {
   const [loading, setLoading] = useState<boolean>(false);
   const [fields, setFields] = useState<IField[]>([]);
@@ -39,6 +43,7 @@ export default function Documents() {
 
   const [selectedFiles, setSelectedFiles] = useState<File[] | null>(null);
   const [responses, setResponses] = useState<IResponse[]>([]);
+  const [test, setTest] = useState<ServiceContract[]>([]);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files ? Array.from(event.target.files) : [];
@@ -77,7 +82,11 @@ export default function Documents() {
       console.log("Response:", response.data.resposta);
       console.log("ID: ", response.data.uid);
       if (response) {
-        setResponses(Object.values(response.data.resposta).flat() as IResponse[]);
+        setTest(response.data.resposta);
+        console.log(test);
+        setResponses(
+          Object.values(response.data.resposta).flat() as IResponse[]
+        );
       }
     } catch (error) {
       console.error("Error:", error);
