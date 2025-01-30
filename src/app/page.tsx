@@ -34,7 +34,7 @@ export default function Home() {
             {catalog.map((item, index) => {
               return (
                 <li key={index}>
-                  <div className=" bg-blue-300 md:w-52 md:h-52 hover:scale-110 p-2 rounded-lg flex flex-col justify-between">
+                  <div className=" bg-blue-300 md:w-52 md:h-52 hover:scale-110 p-6 rounded-lg flex flex-col justify-between">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="60"
