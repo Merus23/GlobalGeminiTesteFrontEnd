@@ -26,7 +26,7 @@ export default function Documents() {
 
   const [selectedDocumentType, setSelectedDocumentType] = useState<string>("");
 
-  const ContratoSES: IField[] = [
+  const ContratoPadrao: IField[] = [
     {
       name: "CNPJ Contratante",
       description:
@@ -43,7 +43,7 @@ export default function Documents() {
 
   const [selectedFiles, setSelectedFiles] = useState<File[] | null>(null);
   const [responses, setResponses] = useState<IResponse[]>([]);
-  const [test, setTest] = useState<ServiceContract[]>([]);
+  const [test, setTest] = useState<ServiceContract>();
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files ? Array.from(event.target.files) : [];
@@ -84,9 +84,7 @@ export default function Documents() {
       if (response) {
         setTest(response.data.resposta);
         console.log(test);
-        setResponses(
-          Object.values(response.data.resposta).flat() as IResponse[]
-        );
+        setResponses(response.data.resposta);
       }
     } catch (error) {
       console.error("Error:", error);
@@ -165,12 +163,12 @@ export default function Documents() {
               onChange={(e) => {
                 setSelectedDocumentType(e.target.value);
                 if (e.target.value === "Contrato") {
-                  addFields(ContratoSES);
+                  addFields(ContratoPadrao);
                 }
               }}
             >
               <option value="">Selecione um documento</option>
-              <option value="Contrato">Contrato SES</option>
+              <option value="Contrato">Contrato Padrão</option>
             </select>
           </div>
 
@@ -229,20 +227,22 @@ export default function Documents() {
       <div className=" flex-1 w-full">
         <h1 className="text-2xl pt-4 pb-4">Resultados</h1>
 
-        {responses.map((response, index) => {
-          return (
-            <div
-              key={index}
-              className="p-1 flex flex-col gap-1 odd:bg-gray-700 odd:text-white even:bg-gray-300 even:text-black"
-            >
-              <details>
-                <summary className="text-base">{response.name}</summary>
-                <p className="text-sm">{response.description}</p>
-              </details>
-              <p className="text-lg font-semibold">{response.response}</p>
-            </div>
-          );
-        })}
+        {Object.keys(responses).map(key => (
+          <div>
+            <div>{key}</div>
+            {
+              responses[key].map((r, index) => {
+                return (
+                  <div>
+                    <div>{r.name}</div>
+                    <div>{r.response}</div>
+                  </div>
+                )
+              })
+            }
+          </div>
+        ))
+      }
       </div>
       <Spinner isVisible={loading} />
     </div>
